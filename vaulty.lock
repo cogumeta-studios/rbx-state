@@ -1,0 +1,27 @@
+[[root_redirects]]
+name = "AcidSignal"
+target = "github.com_thecogumeta_rbx-acidsignal@v1.0.2"
+scope = "dependencies"
+
+[[root_redirects]]
+name = "Specium"
+target = "github.com_thecogumeta_rbx-specium@v1.2.2"
+scope = "dev-dependencies"
+
+[[package]]
+name = "thecogumeta_rbx-acidsignal-v1.0.2-9Y7jdi"
+source = "github.com:thecogumeta/rbx-acidsignal"
+scope = "dependencies"
+provider = "github.com"
+ref = "v1.0.2"
+folder = "github.com_thecogumeta_rbx-acidsignal@v1.0.2"
+redirects = [ ]
+
+[[package]]
+name = "thecogumeta_rbx-specium-v1.2.2-RIklcr"
+source = "github.com:thecogumeta/rbx-specium"
+scope = "dev-dependencies"
+provider = "github.com"
+ref = "v1.2.2"
+folder = "github.com_thecogumeta_rbx-specium@v1.2.2"
+redirects = [ ]

@@ -1,0 +1,17 @@
+[package]
+name = "cogumeta/state"
+version = "1.0.0"
+exclude = [ "**" ]
+include = [
+  "src/**/*",
+  "lib/**/*",
+  "default.project.json",
+  "vaulty.toml"
+]
+
+[dependencies]
+AcidSignal = "thecogumeta/rbx-acidsignal@*"
+
+[dev-dependencies]
+Specium = "thecogumeta/rbx-specium@*"
+

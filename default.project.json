@@ -1,0 +1,10 @@
+{
+  "name": "state",
+  "tree": {
+    "$path": "lib",
+    "Packages": {
+      "$path": "Packages"
+    }
+  }
+}
+

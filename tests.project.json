@@ -1,0 +1,22 @@
+{
+  "name": "state Test-Runner",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "DevPackages": {
+        "$path": "DevPackages"
+      },
+      "state": {
+        "$path": "lib",
+        "Packages": {
+          "$path": "Packages"
+        }
+      }
+    },
+    "ServerScriptService": {
+      "Tests": {
+        "$path": "tests"
+      }
+    }
+  }
+}

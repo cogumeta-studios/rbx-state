@@ -1,0 +1,8 @@
+syntax = "Luau"
+indent_type = "Tabs"
+column_width = 75
+quote_style = "ForceDouble"
+call_parentheses = "Input"
+collapse_simple_statement = "Always"
+line_endings = "Unix"
+block_newline_gaps = "Never"
