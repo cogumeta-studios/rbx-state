@@ -1,6 +1,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local State, Computed = require(ReplicatedStorage.state)
+local StateBuilder = require(ReplicatedStorage.state)
+local State, Computed = StateBuilder.NewState, StateBuilder.NewComputed
 local Specium = require(ReplicatedStorage.DevPackages.Specium)
 
 local expect = Specium.expect

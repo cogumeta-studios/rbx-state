@@ -145,4 +145,4 @@ local function NewComputed<T>(
 	return self
 end
 
-return NewState, NewComputed
+return { NewState = NewState, NewComputed = NewComputed }
