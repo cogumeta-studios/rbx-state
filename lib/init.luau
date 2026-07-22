@@ -4,6 +4,8 @@ export type Bind<T> = (newValue: T, oldValue: T) -> ()
 export type State<T = any> = {
 	get: (self: State<T>) -> T,
 	set: (self: State<T>, newValue: T) -> T,
+	add: (self: State<T>, addValue: T) -> T,
+	mul: (self: State<T>, mulValue: T) -> T,
 	bind: (self: State<T>, bind: Bind<T>) -> Bind<T>,
 	unbind: (self: State<T>, bind: Bind<T>) -> (Bind<T>, boolean),
 	binded: (self: State<T>, bind: Bind<T>) -> boolean,
@@ -65,6 +67,16 @@ local function StateSet<T>(self: State<T>, newValue: T): T
 	return newValue
 end
 
+local function StateAdd<T>(self: State<T>, addValue: T): T
+	self:set(self:get() :: any + addValue :: any)
+	return addValue
+end
+
+local function StateMul<T>(self: State<T>, mulValue: T): T
+	self:set(self:get() :: any * mulValue :: any)
+	return mulValue
+end
+
 local function NewState<T>(startValue: T): State<T>
 	local self: State<T> = {} :: any
 	local anyself: any = self
@@ -75,6 +87,8 @@ local function NewState<T>(startValue: T): State<T>
 
 	self.set = StateSet
 	self.get = SharedGet
+	self.add = StateAdd
+	self.mul = StateMul
 	self.bind = SharedBind
 	self.unbind = SharedUnbind
 	self.binded = SharedBinded
