@@ -9,7 +9,7 @@ target = "github.com_thecogumeta_rbx-specium@v1.2.2"
 scope = "dev-dependencies"
 
 [[package]]
-name = "thecogumeta_rbx-acidsignal-v1.0.2-9Y7jdi"
+name = "thecogumeta_rbx-acidsignal-v1.0.2-oakjNk"
 source = "github.com:thecogumeta/rbx-acidsignal"
 scope = "dependencies"
 provider = "github.com"
@@ -18,7 +18,7 @@ folder = "github.com_thecogumeta_rbx-acidsignal@v1.0.2"
 redirects = [ ]
 
 [[package]]
-name = "thecogumeta_rbx-specium-v1.2.2-RIklcr"
+name = "thecogumeta_rbx-specium-v1.2.2-3gGgfP"
 source = "github.com:thecogumeta/rbx-specium"
 scope = "dev-dependencies"
 provider = "github.com"
