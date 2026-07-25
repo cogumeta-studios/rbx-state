@@ -63,6 +63,8 @@ local function StateSet<T>(self: State<T>, newValue: T): T
 	local anyself: any = self
 	local oldvalue = anyself._value
 
+	if oldvalue == newValue then return newValue end
+
 	anyself._value = newValue
 	anyself._signal:Fire(newValue, oldvalue)
 
