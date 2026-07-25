@@ -1,6 +1,13 @@
 local Signal = require(script.Packages.AcidSignal)
 
 export type Bind<T> = (newValue: T, oldValue: T) -> ()
+
+export type Dependency<T = any> = {
+	get: (self: any) -> T,
+	bind: (self: any, bind: Bind<T>) -> Bind<T>,
+	unbind: (self: any, bind: Bind<T>) -> (Bind<T>, boolean),
+}
+
 export type State<T = any> = {
 	get: (self: State<T>) -> T,
 	set: (self: State<T>, newValue: T) -> T,
@@ -88,7 +95,7 @@ local function StateDiv<T>(self: State<T>, value: T): T
 end
 
 local function NewState<T>(startValue: T): State<T>
-	local self: State<T> = {} :: any
+	local self = {} :: State<T>
 	local anyself: any = self
 
 	anyself._value = startValue
@@ -108,12 +115,6 @@ local function NewState<T>(startValue: T): State<T>
 
 	return self
 end
-
-export type Dependency<T = any> = {
-	get: (self: any) -> T,
-	bind: (self: any, bind: Bind<T>) -> Bind<T>,
-	unbind: (self: any, bind: Bind<T>) -> (Bind<T>, boolean),
-}
 
 export type Computed<T> = {
 	recompute: (self: Computed<T>) -> (),
@@ -145,7 +146,7 @@ local function NewComputed<T>(
 	compute: () -> T,
 	deps: { Dependency }
 ): Computed<T>
-	local self: Computed<T> = {} :: any
+	local self = {} :: Computed<T>
 	local anyself: any = self
 
 	anyself._compute = compute
@@ -171,4 +172,89 @@ local function NewComputed<T>(
 	return self
 end
 
-return { NewState = NewState, NewComputed = NewComputed }
+export type DeltaMode = "add" | "sub" | "mul" | "div"
+export type Delta = State<number> & {
+	root: State<number>,
+	mode: DeltaMode,
+	destroy: (self: Delta) -> (),
+}
+
+local function DeltaDestroy(self: Delta)
+	local anyself: any = self
+	local root = self.root
+	local mode = self.mode
+	local value = self:get()
+
+	if mode == "add" then
+		root:sub(value)
+	elseif mode == "sub" then
+		root:add(value)
+	elseif mode == "mul" then
+		if value == 0 then
+			root:set(anyself._base)
+		else
+			root:div(value)
+		end
+	elseif mode == "div" then
+		root:mul(value)
+	end
+
+	self:unbind(anyself._deltabind)
+	SharedDestroy(anyself)
+end
+
+local function NewDelta(
+	root: State<number>,
+	mode: DeltaMode,
+	startValue: number?
+): Delta
+	startValue = startValue or (mode == "mul" or mode == "div") and 1 or 0
+	local self = NewState(startValue) :: Delta
+	local anyself: any = self
+
+	anyself._base = root:get()
+
+	self.root = root
+	self.mode = mode
+	self.destroy = DeltaDestroy :: any
+
+	if mode == "add" then
+		root:add(startValue)
+	elseif mode == "sub" then
+		root:sub(startValue)
+	elseif mode == "mul" then
+		root:mul(startValue)
+	elseif mode == "div" then
+		assert(startValue ~= 0, "[States.Delta] cannot divide by 0")
+		root:div(startValue)
+	end
+
+	anyself._deltabind = self:bind(function(newValue, oldValue)
+		if mode == "add" then
+			anyself._base = root:get() - oldValue
+			root:add(newValue - oldValue)
+		elseif mode == "sub" then
+			anyself._base = root:get() + oldValue
+			root:sub(newValue - oldValue)
+		elseif mode == "mul" then
+			if oldValue == 0 then
+				root:set(anyself._base * newValue)
+			else
+				anyself._base = root:get() / oldValue
+				root:mul(newValue / oldValue)
+			end
+		elseif mode == "div" then
+			assert(newValue ~= 0, "[States.Delta] cannot divide by 0")
+			anyself._base = root:get() * oldValue
+			root:div(newValue / oldValue)
+		end
+	end)
+
+	return self
+end
+
+return {
+	NewState = NewState,
+	NewComputed = NewComputed,
+	NewDelta = NewDelta,
+}
